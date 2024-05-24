@@ -67,7 +67,7 @@ To run the application:
 
 ## API Reference
 
-### Subscription controller
+### Subscription REST controller
 #### Retry establishing subscription connection
 - **Endpoint**: `/api/subscription/erc721/retry`
 - **Method**: `POST`
@@ -85,7 +85,7 @@ Note: For future works, I would refactor this so that a different status code is
   - `200 OK`: Returns a String with connection status message `Subscription is active.` or `Subscription is not active.`
 Note: For future works, I would refactor this so that a different status code is returned for the different scenarios.
 
-### Token indexer controller
+### Token indexer REST controller
 #### Query the database for ERC-721 Token Transfer events that occured over the Ethereum network.
 - **Endpoint**: `/api/subscription/erc721/retry`
 - **Method**: `POST`
@@ -158,8 +158,8 @@ Note: For future works, I would refactor this so that a different status code is
               "number": 0,
               "empty": false
             }
-        }
-       ```
+           }
+           ```
    - Example reponse:
         - ```
             {
