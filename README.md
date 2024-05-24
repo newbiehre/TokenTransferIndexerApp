@@ -4,8 +4,8 @@
 
 ### What it does
 This application tracks and indexes ERC-721 Token Transfer events on the Ethereum network. It allow users to query all 
-indexed ERC-721 token transfer events that occured while the application is running and enables users to check the connection status
-and manually retry establishing a connection when connnection fails.
+indexed ERC-721 token transfer events that occured while the application is running. It also enables users to check the connection status
+and manually retry establishing a connection whenever the connnection fails.
 
 ### Main technologies used
 #### General
@@ -16,18 +16,19 @@ and manually retry establishing a connection when connnection fails.
 
 #### Blockchain related
 - Infura, for reliable websocket endpoint to EVM chain (https://www.infura.io/)
-- Web3j, a library compatible with JVM languages for interacting with  ethereum client for EVM languages (https://docs.web3j.io/4.11.0/).
+- Web3j, a library compatible with JVM languages for interacting with ethereum client (https://docs.web3j.io/4.11.0/).
 
 ## Table of Contents
 - [Getting started](#getting-started)
 - [Tests](#tests)
+- [API reference](#api-reference)
 - [Future work](#future-work)
 - [Author](#author)
 - [License](#license)
 
-# Getting started
+## Getting started
 
-### Build project
+### Prerequisites
 Please ensure you are using the following:
 - JDK version 21.0.2
 ```
@@ -45,23 +46,160 @@ Then click on the build gradke button on IDE (or run terminal command `./gradlew
    - Endpoint networks ethereum: mainnet
    - ![image](https://github.com/newbiehre/TokenTransferIndexerApp/assets/58487237/ecc3ef27-466a-49da-b68e-0d530b6292cf)
 5. Copy API key and paste it in infura.apiKey in application.yaml file (root path: src/main/resources/application.yaml)
-   - Note this is required for running both the application and for Erc721UtilsTest.kt (as it makes a real API call using this API key).
+   - Note this is required for running both the application and for Erc721UtilsTest.kt (as this tesst makes a real API call using this API key).
     
 #### 2. Have a local PostgreSQL database instance running
 Please ensure you have a local postgreSQL server running with a database created.
 
-1. Provide the following value for the application.yaml file (root path: src/main/resources/application.yaml):
+1. Provide the following value for the application.yaml file from your running instance (root path: src/main/resources/application.yaml):
   - Valid username.
   - Valid password.
-  - Valid database. 
-    - Replace the bolded word with a valid database name in datasource.url: `jdbc:postgresql://localhost:5432/**postgres**`
+  - Valid database.
+  - Also replace the following bolded word with a valid database name in datasource.url: `jdbc:postgresql://localhost:5432/**postgres**`
 
-### 3. Run application
+### Usage
+To run application:
 1. Find TokenTransferIndexerApplication.kt (root path: src/main/kotlin/com/example/demo/TokenTransferIndexerApplication.kt)
-2. Left click on file and select 'Run 'TokenTransferIndexer'
+2. Left click on file and select 'Run 'TokenTransferIndexer''
+
+## API Reference
+
+### Subscription controller
+#### Retry establishing subscription connection
+- **Endpoint**: `/api/subscription/erc721/retry`
+- **Method**: `POST`
+- **Description**: Endpoint to trigger manual retry when subscription connection fails to establish.
+- **Response**:
+  - `200 OK`: Returns a String with connection status message.
+    `Retry successful.` or `Connection already established.`
+Note: For future works, I would refactor this so that a different status code is returned for the different scenarios.
+
+#### Retry establishing subscription connection
+- **Endpoint**: `/api/subscription/status`
+- **Method**: `GET`
+- **Description**: Endpoint to get current status of subscription connection.
+- **Response**:
+  - `200 OK`: Returns a String with connection status message.
+    `Subscription is active.` or `Subscription is not active.`
+Note: For future works, I would refactor this so that a different status code is returned for the different scenarios.
+
+### Token indexer controller
+#### Retry establishing subscription connection
+- **Endpoint**: `/api/subscription/erc721/retry`
+- **Method**: `POST`
+- **Description**: Endpoint for querying ERC-7821 token transfer events that occured while the application was running based on provided filter criteria.
+- **Request Body**:
+  - Content-Type: application/json
+  - Schema:
+       ```
+        {
+            "txHash": "Nullable String",
+            "blockNumber": "Nullable Big Integer",
+            "logIndex": "Nullable String",
+            "senderAddress": "Nullable String",
+            "receiverAddress": "Nullable String",
+            "tokenId": "Nullable String",
+            "contractAddress": "Nullable String"
+         }
+      ```
+   - Fields:
+      - contractAddress (string, optional): The contract address of the ERC-721 token.
+      - tokenId (string, optional): The ID of the ERC-721 token.
+      - fromAddress (string, optional): The address from which the token was transferred.
+      - toAddress (string, optional): The address to which the token was transferred.
+      - txHash (string, optional): The hash of the transaction.
+      - blockNumber (integer, optional): The block number where the transaction was included.
+- **Query Parameters**:
+   - Page (integer, optional): Page number of the results to retrieve. Default is 0.
+   - Size (integer, optional): Number of entries per page. Default is 20.
+   - Sort (string, optional): Sorting criteria in the format property,asc|desc. Multiple sort criteria are supported.
+- **Response**:
+  - `200 OK`: Returns a Page object containing a lsit of ERC-721 tokens.
+     - Schema:
+         - ```
+           {
+              "content": [
+                {
+                  "txHash": "String",
+                  "blockNumber": "Big Integer",
+                  "logIndex": "String",
+                  "senderAddress": "String",
+                  "receiverAddress": "String",
+                  "tokenId": "String",
+                  "contractAddress": "String"
+                }
+              ],
+              "pageable": {
+                "sort": {
+                  "sorted": false,
+                  "unsorted": false,
+                  "empty": true
+                },
+                "pageNumber": 0,
+                "pageSize": 20,
+                "offset": 0,
+                "paged": true,
+                "unpaged": false
+              },
+              "totalPages": 1,
+              "totalElements": 1,
+              "last": false,
+              "first": true,
+              "sort": {
+                "sorted": true,
+                "unsorted": false,
+                "empty": false
+              },
+              "numberOfElements": 1,
+              "size": 20,
+              "number": 0,
+              "empty": false
+            }
+        }
+       ```
+   - Example reponse:
+        - ```
+            {
+             "content": [
+                       {
+                  "txHash": "0xe2d990a94bcb79f3111333b52ef8809f158ac226595928f36f8cadd144970129",
+                  "blockNumber": 19924777,
+                  "logIndex": 272,
+                  "senderAddress": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                  "receiverAddress": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                  "tokenId": "0x000000000000000000000000deface9dc31657539447b7a85e673bb3e0eff248",
+                  "contractAddress": "0x762c2dd38515e8c3c9b216896e27894ef37b68de"
+              }
+          ],
+          "pageable": {
+              "pageNumber": 0,
+              "pageSize": 20,
+              "sort": {
+                  "empty": true,
+                  "unsorted": true,
+                  "sorted": false
+              },
+              "offset": 0,
+              "paged": true,
+              "unpaged": false
+          },
+          "last": true,
+          "totalElements": 1,
+          "totalPages": 1,
+          "first": true,
+          "size": 20,
+          "number": 0,
+          "sort": {
+              "empty": true,
+              "unsorted": true,
+              "sorted": false
+          },
+          "numberOfElements": 1,
+          "empty": false
+            }
+          ```
 
 ## Tests
-All test files are in src/test directory.
 
 ### Technologies used
 - Mockito-kotlin (version 3.2.0)
@@ -84,18 +222,21 @@ The following test doesn't consistently pass Erc721SubscriptionServiceTest's Bat
 "Should not need to verify contract address (call checkIfErc721())) if found in database" (root path: src/test/kotlin/com/example/demo/services/subscription/Erc721SubscriptionServiceTest.kt).
 Run it again and it should pass. Apologies for the inconvenience for the time being!
 
-### Run tests
-To run all tests, left click on src/test directory and select "Run tests in demo tests" using your IDE. 
-To run individual tests instead, left click on a test file and select "Run..." using your IDE. 
+### Usage
+To run all tests:
+1. Left click on src/test directory and select "Run tests in demo tests" using your IDE.
+To run individual tests instead:
+1. Feft click on a test file and select "Run" using your IDE. 
 
 ## Future work
 ### Add more features
-- Implement support for indexing ERC721 metadata especially those on IPFS, which would be relevant and valuable to users querying ERC-721 token events.
+- Implement automatic retrieval using previous blockNumbers in the database to find missing ERC-721 transfer token events from when the application last ran.
 - Expand monitoring and indexing of other token transfers that occur on the network.
-- Integration a frontend UI
+- Integration a frontend UI.
+- Implement support for indexing ERC721 metadata especially those on IPFS, which would be relevant and valuable to users querying ERC-721 token events.
 
 ### Improvements (from challenges)
-- Use coroutine instead of nromal threads for scheduling tasks and asynchronous calls
+- Use coroutine instead of normal threads for scheduling tasks and asynchronous calls.
     - Challenge:
         - I read that it is better to take advantage of kotlin's coroutine libraries so I have tried to learn and implement coroutines as appropriate in the 
 ERC721SubscriptionService class, but struggled to write the associated tests involving these coroutines.
@@ -103,10 +244,10 @@ ERC721SubscriptionService class, but struggled to write the associated tests inv
         - Having learned how to use Mockk for testing and how it can handle coroutine testing much more easily, I would try to re-implement to use coroutine to handle asynchrnous calls and threading currently used.
 
 ### What I have learned
-- How to use ScheduledExecutorService and ExecutorService from scratch (so apologies in advance if improvements on setting up and cleaning up is needed still)
-- How to use Web3j library (I have only used Web3js library for a Typescript project in the past)
-- How to use Mockk testing library
-- How to use testcontainers to run a postgreSql instance
+- How to use ScheduledExecutorService and ExecutorService from scratch (apologies if improvements on setting up and cleaning up is still needed).
+- How to use Web3j library (I have only used Web3js library for a small Typescript project in the past).
+- How to use the Mockk testing library.
+- How to use testcontainers to run a postgreSql instance for integration tests.
 
 ## Author
 Jodi Chan
