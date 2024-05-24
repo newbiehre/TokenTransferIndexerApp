@@ -5,7 +5,8 @@
 ### What it does
 This application tracks and indexes ERC-721 Token Transfer events on the Ethereum network. It allow users to query all 
 indexed ERC-721 token transfer events that occured while the application is running. It also enables users to check the connection status
-and manually retry establishing the connection when the connnection fails.
+and manually retry establishing the connection when the connnection fails. There is also a log file generated whenever the application rus, 
+which is stored in logs/tokenIndexerApp.log.
 
 ### Main technologies used
 #### General
@@ -253,6 +254,8 @@ ERC721SubscriptionService class, but struggled to write the associated tests inv
 Jodi Chan
 - Email: chanjodic@gmail.com
 - LinkedIn: www.linkedin.com/in/jodi-chan
+
+If you have any questions or clarifications, please feel free to reach out!
 
 ## License
 MIT License
