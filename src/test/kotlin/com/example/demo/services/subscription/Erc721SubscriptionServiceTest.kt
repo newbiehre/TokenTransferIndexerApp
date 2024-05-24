@@ -20,6 +20,9 @@ import io.mockk.verify
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
+import java.util.concurrent.ConcurrentMap
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -32,9 +35,6 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.methods.response.Log
 import org.web3j.protocol.websocket.WebSocketService
-import java.util.concurrent.ConcurrentMap
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
 
 
 /**

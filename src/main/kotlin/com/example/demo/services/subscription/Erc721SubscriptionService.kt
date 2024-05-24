@@ -7,11 +7,6 @@ import com.example.demo.services.factories.Web3jFactory
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import jakarta.transaction.Transactional
-import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.stereotype.Service
-import org.web3j.protocol.Web3j
-import org.web3j.protocol.websocket.WebSocketService
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -20,6 +15,11 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
+import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Service
+import org.web3j.protocol.Web3j
+import org.web3j.protocol.websocket.WebSocketService
 
 /**
  * Service class for ERC-721 Subscription Service.

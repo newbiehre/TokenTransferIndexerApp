@@ -4,6 +4,7 @@ import com.example.demo.dtos.Erc721TokenDto
 import com.example.demo.entities.Erc721TokenEntity
 import com.example.demo.services.Erc721TokenIndexerService
 import com.fasterxml.jackson.databind.ObjectMapper
+import java.math.BigInteger
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,7 +22,6 @@ import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.math.BigInteger
 
 
 /**

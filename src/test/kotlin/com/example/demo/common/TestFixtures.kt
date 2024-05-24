@@ -1,8 +1,8 @@
 package com.example.demo.common
 
 import com.example.demo.entities.Erc721TokenEntity
-import org.web3j.protocol.core.methods.response.Log
 import java.math.BigInteger
+import org.web3j.protocol.core.methods.response.Log
 
 /**
  * Utility object for creating test fixtures.

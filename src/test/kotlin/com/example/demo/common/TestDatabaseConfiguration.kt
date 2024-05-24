@@ -1,13 +1,13 @@
 package com.example.demo.common
 
 import com.github.dockerjava.api.exception.NotFoundException
+import javax.sql.DataSource
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 import org.springframework.jdbc.datasource.DriverManagerDataSource
 import org.testcontainers.containers.PostgreSQLContainer
-import javax.sql.DataSource
 
 /**
  * Test configuration class for setting up a PostgreSQL database container.

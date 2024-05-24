@@ -1,9 +1,9 @@
 package com.example.demo.services.providers
 
-import org.springframework.context.annotation.Bean
-import org.springframework.stereotype.Component
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
+import org.springframework.context.annotation.Bean
+import org.springframework.stereotype.Component
 
 /**
  * Provider for creating a single-threaded ScheduledExecutorService suitable for retries
