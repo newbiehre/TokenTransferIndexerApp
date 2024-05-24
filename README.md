@@ -4,19 +4,21 @@
 
 ### What it does
 This application tracks and indexes ERC-721 Token Transfer events on the Ethereum network. It allow users to query all 
-indexed ERC-721 token transfer events that occured while the application is running. It also enables users to check the connection status
-and manually retry establishing the connection when the connnection fails. There is also a log file generated whenever the application rus, 
-which is stored in logs/tokenIndexerApp.log.
+indexed ERC-721 token transfer events that occured in real-time while the application is running. It also enable users to check the connection status
+and manually retry reestablishing the connection when the connnection fails. There is also a log file generated whenever the application runs, 
+which is stored in logs/tokenIndexerApp.log file.
+
+Please read the documentation within the source code of all .kt files in the main and test directory for more details.
 
 ### Main technologies used
 #### General
 - Kotlin (version 1.9.23)
 - Spring Boot (versiion 3.2.5)
 - Gradle (version 7.4)
-- PostgrSQL
+- PostgreSQL
 
 #### Blockchain related
-- Infura, for reliable websocket endpoint to EVM chain (https://www.infura.io/).
+- Infura, a popular and reliable websocket endpoint to the Ethereum main network (https://www.infura.io/).
 - Web3j, a library compatible with JVM languages for interacting with ethereum client (https://docs.web3j.io/4.11.0/).
 
 ## Table of Contents
@@ -37,16 +39,16 @@ openjdk 21.0.2 2024-01-16
 OpenJDK Runtime Environment (build 21.0.2+13-58)
 OpenJDK 64-Bit Server VM (build 21.0.2+13-58, mixed mode, sharing)
 ```
-Then click on the build gradke button on IDE (or run terminal command `./gradlew build` to download all dependencies and compile the code.
+Then click on the build gradle button on your IDE (or run terminal command `./gradlew build` to download all dependencies and compile the code).
 
 #### 1. Open a Infura Account and obtain an API key
-1. Login to Infura (https://www.infura.io/).
-2. You should be taken to the API Keys page after login.
+1. Login or create a Infura account (https://www.infura.io/).
+2. You should be taken to the API Keys page after authentication.
 3. Create a new API key or select an existing one.
 4. Ensure the following is checked and saved:
-   - Endpoint networks ethereum: mainnet
+   - Endpoint networks ethereum: mainnet (doesn't matter if you checked the other options as we won't be using it).
    - ![image](https://github.com/newbiehre/TokenTransferIndexerApp/assets/58487237/ecc3ef27-466a-49da-b68e-0d530b6292cf)
-5. Copy API key and paste it in infura.apiKey in application.yaml file (root path: src/main/resources/application.yaml)
+5. Copy the API key and paste it in infura.apiKey in application.yaml file (root path: src/main/resources/application.yaml).
    - Note this is required for running both the application and for Erc721UtilsTest.kt (as this tesst makes a real API call using this API key).
     
 #### 2. Have a local PostgreSQL database instance running
@@ -56,12 +58,12 @@ Please ensure you have a local postgreSQL server running with a database created
   - Valid username.
   - Valid password.
   - Valid database.
-  - Also replace the following bolded word with a valid database name in datasource.url: `jdbc:postgresql://localhost:5432/**postgres**`
+  - Also replace the following bolded word with a valid database name in datasource.url: `jdbc:postgresql://localhost:5432/**postgres**`.
 
 ### Usage
-To run application:
-1. Find TokenTransferIndexerApplication.kt (root path: src/main/kotlin/com/example/demo/TokenTransferIndexerApplication.kt)
-2. Left click on file and select 'Run 'TokenTransferIndexer''
+To run the application:
+1. Find TokenTransferIndexerApplication.kt (root path: src/main/kotlin/com/example/demo/TokenTransferIndexerApplication.kt).
+2. Left click on file and select 'Run 'TokenTransferIndexer''.
 
 ## API Reference
 
@@ -75,17 +77,16 @@ To run application:
     `Retry successful.` or `Connection already established.`
 Note: For future works, I would refactor this so that a different status code is returned for the different scenarios.
 
-#### Retry establishing subscription connection
+#### Retrieve subscription connection status
 - **Endpoint**: `/api/subscription/status`
 - **Method**: `GET`
 - **Description**: Endpoint to get current status of subscription connection.
 - **Response**:
-  - `200 OK`: Returns a String with connection status message.
-    `Subscription is active.` or `Subscription is not active.`
+  - `200 OK`: Returns a String with connection status message `Subscription is active.` or `Subscription is not active.`
 Note: For future works, I would refactor this so that a different status code is returned for the different scenarios.
 
 ### Token indexer controller
-#### Retry establishing subscription connection
+#### Query the database for ERC-721 Token Transfer events that occured over the Ethereum network.
 - **Endpoint**: `/api/subscription/erc721/retry`
 - **Method**: `POST`
 - **Description**: Endpoint for querying ERC-7821 token transfer events that occured while the application was running based on provided filter criteria.
@@ -96,7 +97,7 @@ Note: For future works, I would refactor this so that a different status code is
         {
             "txHash": "Nullable String",
             "blockNumber": "Nullable Big Integer",
-            "logIndex": "Nullable String",
+            "logIndex": "Nullable Big Integer",
             "senderAddress": "Nullable String",
             "receiverAddress": "Nullable String",
             "tokenId": "Nullable String",
@@ -104,16 +105,17 @@ Note: For future works, I would refactor this so that a different status code is
          }
       ```
    - Fields:
-      - contractAddress (string, optional): The contract address of the ERC-721 token.
-      - tokenId (string, optional): The ID of the ERC-721 token.
-      - fromAddress (string, optional): The address from which the token was transferred.
-      - toAddress (string, optional): The address to which the token was transferred.
-      - txHash (string, optional): The hash of the transaction.
-      - blockNumber (integer, optional): The block number where the transaction was included.
+      - txHash (String, optional): Unique identifier for the transaction, generated based on the transaction details.
+      - blockNumber (Big Integer, optional): The block number in which the transaction was included.
+      - logIndex (Big Integer, optional): Index position of the log entry within the block, useful for identifying specific events.
+      - senderAddress (String, optional): Ethereum address from which the token was sent.
+      - receiverAddress (String, optional): Ethereum address to which the token was sent.
+      - tokenId (String, optional): Unique identifier for the token within the ERC721 contract.
+      - contractAddress (String, optional): Address of the ERC721 contract, unique for each deployed contract.
 - **Query Parameters**:
-   - Page (integer, optional): Page number of the results to retrieve. Default is 0.
-   - Size (integer, optional): Number of entries per page. Default is 20.
-   - Sort (string, optional): Sorting criteria in the format property,asc|desc. Multiple sort criteria are supported.
+   - Page (Integer, optional): Page number of the results to retrieve. Default is 0.
+   - Size (Integer, optional): Number of entries per page. Default is 20.
+   - Sort (String, optional): Sorting criteria in the format property, asc|desc. Multiple sort criteria are supported.
 - **Response**:
   - `200 OK`: Returns a Page object containing a lsit of ERC-721 tokens.
      - Schema:
@@ -123,7 +125,7 @@ Note: For future works, I would refactor this so that a different status code is
                 {
                   "txHash": "String",
                   "blockNumber": "Big Integer",
-                  "logIndex": "String",
+                  "logIndex": "Big Integer",
                   "senderAddress": "String",
                   "receiverAddress": "String",
                   "tokenId": "String",
@@ -162,7 +164,7 @@ Note: For future works, I would refactor this so that a different status code is
         - ```
             {
              "content": [
-                       {
+                 {
                   "txHash": "0xe2d990a94bcb79f3111333b52ef8809f158ac226595928f36f8cadd144970129",
                   "blockNumber": 19924777,
                   "logIndex": 272,
@@ -170,7 +172,7 @@ Note: For future works, I would refactor this so that a different status code is
                   "receiverAddress": "0x0000000000000000000000000000000000000000000000000000000000000000",
                   "tokenId": "0x000000000000000000000000deface9dc31657539447b7a85e673bb3e0eff248",
                   "contractAddress": "0x762c2dd38515e8c3c9b216896e27894ef37b68de"
-              }
+                }
           ],
           "pageable": {
               "pageNumber": 0,
@@ -219,9 +221,10 @@ For Erc721UtilsTest.kt:
 Ensure a valid api key value is provided here before running this test.
 
 ### Warning
-The following test doesn't consistently pass Erc721SubscriptionServiceTest's Batch Processing test 
+The following test doesn't consistently pass on the first go: 
+- Erc721SubscriptionServiceTest's Batch Processing test 
 "Should not need to verify contract address (call checkIfErc721())) if found in database" (root path: src/test/kotlin/com/example/demo/services/subscription/Erc721SubscriptionServiceTest.kt).
-Run it again and it almost always pass. Apologies for the inconvenience for the time being.
+- Run it again and it will almost always pass. Apologies for the inconvenience. For future works, I would fix this.
 
 ### Usage
 To run all tests:
@@ -230,11 +233,14 @@ To run individual tests instead:
 1. Feft click on a test file and select "Run" using your IDE. 
 
 ## Future work
+
 ### Add more features
-- Implement automatic retrieval using previous blockNumbers in the database to find missing ERC-721 transfer token events from when the application last ran.
-- Expand monitoring and indexing of other token transfers that occur on the network.
-- Integration a frontend UI.
+- Implement automatic retrieval using previous blockNumbers in the database to find missing ERC-721 transfer token events from when the application was last running.
+- Integrate a frontend UI.
 - Implement support for indexing ERC721 metadata especially those on IPFS, which would be relevant and valuable to users querying ERC-721 token events.
+- Expand monitoring and indexing of other token transfers that occur on the network.
+   - The application is structured in a way that would easily accomodate additional token types of tokens and events. All files named Erc721* is ERC-721 specific, while the rest
+of the file is meant to be shared. Of course, this may change as needed.
 
 ### Improvements (from challenges)
 - Use coroutine instead of normal threads for scheduling tasks and asynchronous calls.
