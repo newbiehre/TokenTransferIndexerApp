@@ -35,6 +35,7 @@ Please read the documentation within the source code of all .kt files in the mai
 Please ensure you are using the following:
 - JDK version 21.0.2
 ```
+java --version
 openjdk 21.0.2 2024-01-16
 OpenJDK Runtime Environment (build 21.0.2+13-58)
 OpenJDK 64-Bit Server VM (build 21.0.2+13-58, mixed mode, sharing)
@@ -53,6 +54,7 @@ Then click on the build gradle button on your IDE (or run terminal command `./gr
     
 #### 2. Have a local PostgreSQL database instance running
 Please ensure you have a local postgreSQL server running with a database created.
+(https://www.youtube.com/watch?v=PShGF_udSpk&ab_channel=ProgrammingKnowledge -> Tutorial on how to install, configure and use PostgreSQL on Mac computers).
 
 1. Provide the following value for the application.yaml file from your running instance (root path: src/main/resources/application.yaml):
   - Valid username.
@@ -252,6 +254,9 @@ ERC721SubscriptionService class, but struggled to write the associated tests inv
 
 ### What I have learned
 - How to use ScheduledExecutorService and ExecutorService from scratch (apologies if improvements on setting up and cleaning up is still needed).
+   - This is used to make the subscription service more performant for handling such frequently emitted events, for the asynchronous call to the blockchain, and frequent
+   - need to access and store data into the database.
+   - As mentioned earlier, I wanted to use coroutine instead. Unfortunately I did not have enough time to how to correctly test coroutine tests.
 - How to use Web3j library (I have only used Web3js library for a small Typescript project in the past).
 - How to use the Mockk testing library.
 - How to use testcontainers to run a postgreSql instance for integration tests.
