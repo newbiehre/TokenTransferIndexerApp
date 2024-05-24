@@ -5,7 +5,9 @@
 ### What it does
 This application tracks and indexes ERC-721 Token Transfer events on the Ethereum network. It allow users to query all 
 indexed ERC-721 token transfer events that occured in real-time while the application is running. It also enable users to check the connection status
-and manually retry reestablishing the connection when the connnection fails. There is also a log file that logs the activities taking place while 
+and manually retry reestablishing the connection when the connnection fails. 
+
+There is also a log file that logs the activities taking place while 
 the application runs. The logs are stored in logs/tokenIndexerApp.log file.
 
 Please read the documentation within the source code of all .kt files in the main and test directory for more details.
@@ -119,7 +121,7 @@ Note: For future works, I would refactor this so that a different status code is
    - Size (Integer, optional): Number of entries per page. Default is 20.
    - Sort (String, optional): Sorting criteria in the format property, asc|desc. Multiple sort criteria are supported.
 - **Response**:
-  - `200 OK`: Returns a Page object containing a lsit of ERC-721 tokens.
+  - `200 OK`: Returns a Page object containing a list of ERC-721 tokens.
      - Schema:
          - ```
            {
@@ -213,25 +215,25 @@ Note: For future works, I would refactor this so that a different status code is
 - Testcontainers:postgresql (version 1.19.8)
 
 ### Set up
-For running integration tests involving database testing (Tests: Erc721TokenDaoTest.kt, Erc721TOkenRepositoryTest.kt, Erc721UtilsTest.kt):
+For running integration tests involving database testing (Tests: Erc721TokenDaoTest.kt, Erc721TokenRepositoryTest.kt):
 1. Open application-test.yaml file (root path: src/test/resources/application-test.yaml)
 2. Provide a valid username and password to your PostgreSQL database (can be the same as your application.yaml values).
 3. Install Docker Desktop and ensure a Docker instance is running (installation guide: https://docs.docker.com/desktop/).
 
 For Erc721UtilsTest.kt:
 1. It utilizes application.yaml file (root path: src/main/resources/application.yaml) to retreive infura.apiKey.
-Ensure a valid api key value is provided here before running this test.
+Ensure a valid api key value is provided before running the test.
 
 ### Warning
 The following test doesn't consistently pass on the first go: 
 - Erc721SubscriptionServiceTest's Batch Processing test 
 "Should not need to verify contract address (call checkIfErc721())) if found in database" (root path: src/test/kotlin/com/example/demo/services/subscription/Erc721SubscriptionServiceTest.kt).
-- Run it again and it will almost always pass. Apologies for the inconvenience. For future works, I would fix this.
+- Run it again and it will almost always pass. Apologies for the inconvenience. For future works, I would fix this to ensure it will always pass the test consistently
 
 ### Usage
 To run all tests:
 1. Left click on src/test directory and select "Run tests in demo tests" using your IDE.
-To run individual tests instead:
+To run the tests individually:
 1. Feft click on a test file and select "Run" using your IDE. 
 
 ## Future work
