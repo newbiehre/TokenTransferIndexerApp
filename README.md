@@ -5,8 +5,8 @@
 ### What it does
 This application tracks and indexes ERC-721 Token Transfer events on the Ethereum network. It allow users to query all 
 indexed ERC-721 token transfer events that occured in real-time while the application is running. It also enable users to check the connection status
-and manually retry reestablishing the connection when the connnection fails. There is also a log file generated whenever the application runs, 
-which is stored in logs/tokenIndexerApp.log file.
+and manually retry reestablishing the connection when the connnection fails. There is also a log file that logs the activities taking place while 
+the application runs. The logs are stored in logs/tokenIndexerApp.log file.
 
 Please read the documentation within the source code of all .kt files in the main and test directory for more details.
 
