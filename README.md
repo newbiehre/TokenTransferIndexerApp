@@ -5,7 +5,7 @@
 ### What it does
 This application tracks and indexes ERC-721 Token Transfer events on the Ethereum network. It allow users to query all 
 indexed ERC-721 token transfer events that occured while the application is running. It also enables users to check the connection status
-and manually retry establishing a connection whenever the connnection fails.
+and manually retry establishing the connection when the connnection fails.
 
 ### Main technologies used
 #### General
@@ -15,7 +15,7 @@ and manually retry establishing a connection whenever the connnection fails.
 - PostgrSQL
 
 #### Blockchain related
-- Infura, for reliable websocket endpoint to EVM chain (https://www.infura.io/)
+- Infura, for reliable websocket endpoint to EVM chain (https://www.infura.io/).
 - Web3j, a library compatible with JVM languages for interacting with ethereum client (https://docs.web3j.io/4.11.0/).
 
 ## Table of Contents
@@ -220,7 +220,7 @@ Ensure a valid api key value is provided here before running this test.
 ### Warning
 The following test doesn't consistently pass Erc721SubscriptionServiceTest's Batch Processing test 
 "Should not need to verify contract address (call checkIfErc721())) if found in database" (root path: src/test/kotlin/com/example/demo/services/subscription/Erc721SubscriptionServiceTest.kt).
-Run it again and it should pass. Apologies for the inconvenience for the time being!
+Run it again and it almost always pass. Apologies for the inconvenience for the time being.
 
 ### Usage
 To run all tests:
