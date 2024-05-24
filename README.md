@@ -20,8 +20,8 @@ and manually retry establishing a connection whenever the connnection fails.
 
 ## Table of Contents
 - [Getting started](#getting-started)
-- [Tests](#tests)
 - [API reference](#api-reference)
+- [Tests](#tests)
 - [Future work](#future-work)
 - [Author](#author)
 - [License](#license)
